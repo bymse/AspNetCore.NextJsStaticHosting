@@ -11,22 +11,20 @@ internal static class NextJsRoutesProvider
     }
 
     private static readonly Regex SlugRegex = new(@"\[(?<slug>[A-z0-9_\.]+)\]");
-    private static readonly Regex IndexHtmlEnding = new(@"\/index\.html$");
-    
+    private static readonly Regex HtmlEndingRegex = new(@"\.html$");
+
     private static IEnumerable<FileRoute> GetRoute(string path)
     {
-        var route = SlugRegex.Replace(path, match => $"{{{match.Value}}}");
+        var route = SlugRegex.Replace(path, match => $"{{{match.Groups["slug"].Value}}}");
         yield return new FileRoute(route, path);
 
         if (path.Equals("index.html"))
         {
-            yield return new FileRoute("/", path);
+            yield return new FileRoute("", path);
         }
-
-        if (IndexHtmlEnding.IsMatch(path))
+        else if (path.EndsWith(".html"))
         {
-            var pathWithoutIndexHtml = IndexHtmlEnding.Replace(path, "");
-            yield return new FileRoute(pathWithoutIndexHtml, path);
+            yield return new FileRoute(HtmlEndingRegex.Replace(route, ""), path);
         }
     }
 
