@@ -6,7 +6,7 @@ using NextJsStaticHosting.VersionAdjust.Endpoints.Routes;
 
 namespace NextJsStaticHosting.VersionAdjust.Endpoints;
 
-internal static class NextJsHtmlEndpointsBuilder
+internal static class NextJsPageEndpointsBuilder
 {
     public static IEnumerable<Endpoint> Build(
         FileRoute[] routes,
@@ -44,7 +44,7 @@ internal static class NextJsHtmlEndpointsBuilder
                 );
             }
 
-            context.Request.Path = metadata.Path;
+            context.Request.Path = "/" + metadata.Path;
             context.SetEndpoint(null);
 
             return next(context);
@@ -52,7 +52,7 @@ internal static class NextJsHtmlEndpointsBuilder
 
         app.UseStaticFiles(new StaticFileOptions
         {
-            OnPrepareResponse = options.OnPrepareResponse,
+            OnPrepareResponse = options.OnPrepareResponse ?? (_ => { }),
             FileProvider = options.FileProvider
         });
 

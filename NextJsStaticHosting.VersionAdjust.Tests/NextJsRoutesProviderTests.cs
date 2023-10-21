@@ -28,8 +28,8 @@ public class NextJsRoutesProviderTests
             Path.Combine(Environment.CurrentDirectory, "TestFiles")
         );
 
-        var actual = NextJsRoutesProvider
-            .GetFileRoutes(fileProvider)
+        var actual = NextJsPageFileRoutesProvider
+            .GetRoutes(fileProvider)
             .OrderBy(e => e.Route)
             .ToArray();
 

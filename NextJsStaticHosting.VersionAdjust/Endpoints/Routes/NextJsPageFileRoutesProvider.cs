@@ -3,11 +3,11 @@ using Microsoft.Extensions.FileProviders;
 
 namespace NextJsStaticHosting.VersionAdjust.Endpoints.Routes;
 
-internal static class NextJsRoutesProvider
+internal static class NextJsPageFileRoutesProvider
 {
-    public static IEnumerable<FileRoute> GetFileRoutes(IFileProvider fileProvider)
+    public static IEnumerable<FileRoute> GetRoutes(IFileProvider fileProvider, params string[] dirsToExclude)
     {
-        return GetFilesRelativePaths(fileProvider).SelectMany(GetRoute);
+        return GetFilesRelativePaths(fileProvider, dirsToExclude).SelectMany(GetRoute);
     }
 
     private static readonly Regex SlugRegex = new(@"\[(?<slug>(?!\[?\.\.\.)[A-z0-9_]+?)\]", RegexOptions.Compiled);
@@ -38,7 +38,7 @@ internal static class NextJsRoutesProvider
         }
     }
 
-    private static IEnumerable<string> GetFilesRelativePaths(IFileProvider fileProvider)
+    private static IEnumerable<string> GetFilesRelativePaths(IFileProvider fileProvider, string[] dirsToExclude)
     {
         var dirs = new Stack<string>();
         dirs.Push("");
@@ -49,11 +49,11 @@ internal static class NextJsRoutesProvider
             foreach (var content in fileProvider.GetDirectoryContents(dir))
             {
                 var path = dir == "" ? content.Name : $"{dir}/{content.Name}";
-                if (content.IsDirectory)
+                if (content.IsDirectory && !dirsToExclude.Contains(path))
                 {
                     dirs.Push(path);
                 }
-                else
+                else if (Path.GetExtension(content.Name) == ".html")
                 {
                     yield return path;
                 }

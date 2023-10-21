@@ -6,19 +6,19 @@ using NextJsStaticHosting.VersionAdjust.Endpoints.Routes;
 
 namespace NextJsStaticHosting.VersionAdjust.Endpoints;
 
-public class NextJsHtmlEndpointsDataSource : EndpointDataSource
+public class NextJsPagesEndpointsDataSource : EndpointDataSource
 {
     private readonly Lazy<IReadOnlyList<Endpoint>> endpoints;
 
-    public NextJsHtmlEndpointsDataSource(IEndpointRouteBuilder endpointsBuilder, NextJsStaticFilesOptions options)
+    public NextJsPagesEndpointsDataSource(IEndpointRouteBuilder endpointsBuilder, NextJsStaticFilesOptions options)
     {
         endpoints = new Lazy<IReadOnlyList<Endpoint>>(() =>
         {
-            var routes = NextJsRoutesProvider
-                .GetFileRoutes(options.FileProvider)
+            var routes = NextJsPageFileRoutesProvider
+                .GetRoutes(options.FileProvider!, options.StaticBuildDir)
                 .ToArray();
 
-            return NextJsHtmlEndpointsBuilder
+            return NextJsPageEndpointsBuilder
                 .Build(routes, endpointsBuilder, options)
                 .ToArray();
         });

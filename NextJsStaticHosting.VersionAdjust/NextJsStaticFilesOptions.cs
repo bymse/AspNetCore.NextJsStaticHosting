@@ -6,6 +6,8 @@ namespace NextJsStaticHosting.VersionAdjust;
 public class NextJsStaticFilesOptions
 {
     public IFileProvider FileProvider { get; init; }
+
+    public string StaticBuildDir { get; init; } = "_next";
     
-    public Action<StaticFileResponseContext> OnPrepareResponse { get; set; }
+    public Action<StaticFileResponseContext>? OnPrepareResponse { get; set; }
 }
