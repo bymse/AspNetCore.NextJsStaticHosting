@@ -10,11 +10,21 @@ internal static class NextJsRoutesProvider
         return GetFilesRelativePaths(fileProvider).SelectMany(GetRoute);
     }
 
-    private static readonly Regex SlugRegex = new(@"\[(?<slug>[A-z0-9_\.]+)\]");
-    private static readonly Regex HtmlEndingRegex = new(@"\.html$");
+    private static readonly Regex SlugRegex = new(@"\[(?<slug>(?!\[?\.\.\.)[A-z0-9_]+?)\]", RegexOptions.Compiled);
+    private static readonly Regex HtmlEndingRegex = new(@"\.html$", RegexOptions.Compiled);
+
+    private static readonly Regex CatchAllRegex =
+        new(@"\[{1,2}\.{3}(?<slug>[A-z0-9_]+?)\]{1,2}.html", RegexOptions.Compiled);
 
     private static IEnumerable<FileRoute> GetRoute(string path)
     {
+        if (CatchAllRegex.IsMatch(path))
+        {
+            var replaced = CatchAllRegex.Replace(path, match => $"{{**{match.Groups["slug"].Value}}}");
+            yield return new FileRoute(replaced, path);
+            yield break;
+        }
+
         var route = SlugRegex.Replace(path, match => $"{{{match.Groups["slug"].Value}}}");
         yield return new FileRoute(route, path);
 
