@@ -9,7 +9,10 @@
 
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" Version="6.0.0" />
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
     </ItemGroup>
+
+
+
 
 </Project>

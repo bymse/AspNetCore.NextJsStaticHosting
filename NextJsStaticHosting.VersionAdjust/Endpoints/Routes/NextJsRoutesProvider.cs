@@ -1,7 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using Microsoft.Extensions.FileProviders;
 
-namespace NextJsStaticHosting.VersionAdjust.Routes;
+namespace NextJsStaticHosting.VersionAdjust.Endpoints.Routes;
 
 internal static class NextJsRoutesProvider
 {
