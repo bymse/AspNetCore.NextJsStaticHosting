@@ -1,7 +1,15 @@
+using Microsoft.Extensions.FileProviders;
+using NextJsStaticHosting.VersionAdjust;
+
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-app.MapGet("/about", () => "about");
-app.MapGet("/about/{**path}", () => "path");
+var options = new NextJsStaticFilesOptions
+{
+    FileProvider = new PhysicalFileProvider(builder.Environment.ContentRootPath + "/client-app/out"),
+};
+
+app.UseNextJsStaticPages(options);
+app.UseNextJsStaticFiles(options);
 
 app.Run();
