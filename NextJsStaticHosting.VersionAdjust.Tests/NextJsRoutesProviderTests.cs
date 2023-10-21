@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.FileProviders;
 using NextJsStaticHosting.VersionAdjust.Routes;
-using NSubstitute;
 using Xunit;
 
 namespace NextJsStaticHosting.VersionAdjust.Tests;
