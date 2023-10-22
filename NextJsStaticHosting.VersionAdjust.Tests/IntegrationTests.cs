@@ -28,8 +28,7 @@ public class IntegrationTests : IDisposable
     [InlineData("/inner/page", "inner-page")]
     public async Task ShouldReturnCurrentVersion_OfStaticRoutes(string path, string expectedContent)
     {
-        var response = await httpClient.GetStringAsync(path);
-        Assert.Equal(expectedContent, response);
+        await AssertPathContent(path, expectedContent);
     }
     
     [Theory]
@@ -43,8 +42,7 @@ public class IntegrationTests : IDisposable
     [InlineData("/catchalloptional/first/second", "catch all optional")]
     public async Task ShouldReturnCurrentVersion_OfDynamicRoutes(string path, string expectedContent)
     {
-        var response = await httpClient.GetStringAsync(path);
-        Assert.Equal(expectedContent, response);
+        await AssertPathContent(path, expectedContent);
     }
 
     [Theory]
@@ -58,8 +56,21 @@ public class IntegrationTests : IDisposable
     [InlineData("/_next/static/media/font-current.woff2", "font-current")]
     public async Task ShouldReturnCurrentVersion_OfStaticFiles(string path, string expectedContent)
     {
-        var response = await httpClient.GetStringAsync(path);
-        Assert.Equal(expectedContent, response);
+        await AssertPathContent(path, expectedContent);
+    }
+    
+    [Theory]
+    [InlineData("/image.png", "current-image")]
+    public async Task ShouldReturnCurrentVersion_OfNonHtmlFiles(string path, string expectedContent)
+    {
+        await AssertPathContent(path, expectedContent);
+    }
+    
+    [Theory]
+    [InlineData("/old-image.png", "prev-image")]
+    public async Task ShouldReturnPreviousVersion_OfRemovedFromCurrent_NonHtmlFiles(string path, string expectedContent)
+    {
+        await AssertPathContent(path, expectedContent);
     }
 
     [Theory]
@@ -67,12 +78,19 @@ public class IntegrationTests : IDisposable
     [InlineData("/old.html")]
     [InlineData("/deprecated/page")]
     [InlineData("/deprecated/page.html")]
+    [InlineData("/deprecated/123")]
     public async Task ShouldReturn404_OfPreviousVersionRoutes(string path)
     {
         var response = await httpClient.GetAsync(path);
         var content = await response.Content.ReadAsStringAsync();
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         Assert.Equal("404", content);
+    }
+
+    private async Task AssertPathContent(string path, string expectedContent)
+    {
+        var response = await httpClient.GetStringAsync(path);
+        Assert.Equal(expectedContent, response);
     }
 
     public void Dispose()
