@@ -1,14 +1,26 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <RepositoryUrl>https://github.com/bymse/AspNetCore.NextJsStaticHosting</RepositoryUrl>
+        <Description>ASP.NET Core lib for hosting of statically exported next.js application</Description>
+        <RepositoryType>git</RepositoryType>
+        <Version>0.0.1</Version>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageId>Bymse.AspNetCore.NextJsStaticHosting</PackageId>
+        <Authors>bymse</Authors>
+        <PackageTags>aspnetcore;nextjs</PackageTags>
     </PropertyGroup>
-
-
 
     <ItemGroup>
         <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\README.md" Pack="true" PackagePath="\"/>
+        <None Include="..\LICENSE" Pack="true" PackagePath="\"/>
     </ItemGroup>
 </Project>
