@@ -10,12 +10,12 @@ public class NextJsPagesEndpointsDataSource : EndpointDataSource
 {
     private readonly Lazy<IReadOnlyList<Endpoint>> endpoints;
 
-    public NextJsPagesEndpointsDataSource(IEndpointRouteBuilder endpointsBuilder, NextJsStaticFilesOptions options)
+    public NextJsPagesEndpointsDataSource(IEndpointRouteBuilder endpointsBuilder, NextJsStaticPagesOptions options)
     {
         endpoints = new Lazy<IReadOnlyList<Endpoint>>(() =>
         {
             var routes = NextJsPageFileRoutesProvider
-                .GetRoutes(options.FileProvider!, options.StaticBuildDir)
+                .GetRoutes(options.FileProvider, options.PathsToExclude)
                 .ToArray();
 
             return NextJsPageEndpointsBuilder

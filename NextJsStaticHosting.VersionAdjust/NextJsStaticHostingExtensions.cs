@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using NextJsStaticHosting.VersionAdjust.Endpoints;
 
@@ -7,7 +8,7 @@ namespace NextJsStaticHosting.VersionAdjust;
 public static class NextJsStaticHostingExtensions
 {
     public static IEndpointRouteBuilder UseNextJsStaticPages(this IEndpointRouteBuilder endpoints,
-        NextJsStaticFilesOptions options)
+        NextJsStaticPagesOptions options)
     {
         if (endpoints is null)
         {
@@ -38,7 +39,6 @@ public static class NextJsStaticHostingExtensions
         return applicationBuilder.UseStaticFiles(new StaticFileOptions
         {
             FileProvider = options.FileProvider,
-            OnPrepareResponse = options.OnPrepareResponse ?? (_ => { })
         });
     }
 }

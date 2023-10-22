@@ -29,7 +29,7 @@ public class NextJsRoutesProviderTests
         );
 
         var actual = NextJsPageFileRoutesProvider
-            .GetRoutes(fileProvider)
+            .GetRoutes(fileProvider, Array.Empty<string>())
             .OrderBy(e => e.Route)
             .ToArray();
 

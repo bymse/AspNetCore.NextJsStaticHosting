@@ -11,7 +11,7 @@ internal static class NextJsPageEndpointsBuilder
     public static IEnumerable<Endpoint> Build(
         FileRoute[] routes,
         IEndpointRouteBuilder endpoints,
-        NextJsStaticFilesOptions options
+        NextJsStaticPagesOptions options
     )
     {
         var requestDelegate = GetRequestDelegate(endpoints, options);
@@ -23,24 +23,24 @@ internal static class NextJsPageEndpointsBuilder
                 order: 0
             );
 
-            builder.Metadata.Add(new HtmlEndpointMetadata(route.FilePath));
+            builder.Metadata.Add(new PageEndpointMetadata(route.FilePath));
             builder.DisplayName = route.FilePath;
 
             yield return builder.Build();
         }
     }
 
-    private static RequestDelegate GetRequestDelegate(IEndpointRouteBuilder endpoints, NextJsStaticFilesOptions options)
+    private static RequestDelegate GetRequestDelegate(IEndpointRouteBuilder endpoints, NextJsStaticPagesOptions options)
     {
         var app = endpoints.CreateApplicationBuilder();
         app.Use(next => context =>
         {
             var endpoint = context.GetEndpoint();
-            var metadata = endpoint?.Metadata.GetMetadata<HtmlEndpointMetadata>();
+            var metadata = endpoint?.Metadata.GetMetadata<PageEndpointMetadata>();
             if (metadata == null)
             {
                 throw new InvalidOperationException(
-                    $"{nameof(HtmlEndpointMetadata)} not found on endpoint: {endpoint}"
+                    $"{nameof(PageEndpointMetadata)} not found on endpoint: {endpoint}"
                 );
             }
 
@@ -52,16 +52,15 @@ internal static class NextJsPageEndpointsBuilder
 
         app.UseStaticFiles(new StaticFileOptions
         {
-            OnPrepareResponse = options.OnPrepareResponse ?? (_ => { }),
             FileProvider = options.FileProvider
         });
 
         return app.Build();
     }
 
-    private class HtmlEndpointMetadata
+    private class PageEndpointMetadata
     {
-        public HtmlEndpointMetadata(string path)
+        public PageEndpointMetadata(string path)
         {
             Path = path;
         }

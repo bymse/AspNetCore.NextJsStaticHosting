@@ -5,9 +5,9 @@ namespace NextJsStaticHosting.VersionAdjust.Endpoints.Routes;
 
 internal static class NextJsPageFileRoutesProvider
 {
-    public static IEnumerable<FileRoute> GetRoutes(IFileProvider fileProvider, params string[] dirsToExclude)
+    public static IEnumerable<FileRoute> GetRoutes(IFileProvider fileProvider, string[] pathsToExclude)
     {
-        return GetFilesRelativePaths(fileProvider, dirsToExclude).SelectMany(GetRoute);
+        return GetFilesRelativePaths(fileProvider, pathsToExclude).SelectMany(GetRoute);
     }
 
     private static readonly Regex SlugRegex = new(@"\[(?<slug>(?!\[?\.\.\.)[A-z0-9_]+?)\]", RegexOptions.Compiled);
@@ -38,7 +38,7 @@ internal static class NextJsPageFileRoutesProvider
         }
     }
 
-    private static IEnumerable<string> GetFilesRelativePaths(IFileProvider fileProvider, string[] dirsToExclude)
+    private static IEnumerable<string> GetFilesRelativePaths(IFileProvider fileProvider, string[] pathsToExclude)
     {
         var dirs = new Stack<string>();
         dirs.Push("");
@@ -49,7 +49,12 @@ internal static class NextJsPageFileRoutesProvider
             foreach (var content in fileProvider.GetDirectoryContents(dir))
             {
                 var path = dir == "" ? content.Name : $"{dir}/{content.Name}";
-                if (content.IsDirectory && !dirsToExclude.Contains(path))
+                if (pathsToExclude.Contains(path))
+                {
+                    continue;
+                }
+                
+                if (content.IsDirectory)
                 {
                     dirs.Push(path);
                 }
