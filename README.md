@@ -1,3 +1,4 @@
+[![NuGet Gallery | Bymse.AspNetCore.NextJsStaticHosting](https://img.shields.io/nuget/v/Bymse.AspNetCore.NextJsStaticHosting)](https://www.nuget.org/packages/Bymse.AspNetCore.NextJsStaticHosting)
 # Bymse.AspNetCore.NextJsStaticHosting
 
 Library that enables you to host statically exported Next.js application within ASP.NET Core application.
