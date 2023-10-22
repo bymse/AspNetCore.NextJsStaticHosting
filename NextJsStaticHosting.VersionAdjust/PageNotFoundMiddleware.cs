@@ -10,7 +10,7 @@ public class PageNotFoundMiddleware
     {
         this.next = next;
     }
-    
+
     public Task Invoke(HttpContext context)
     {
         var endpoint = context.GetEndpoint();
@@ -19,11 +19,12 @@ public class PageNotFoundMiddleware
             return next(context);
         }
 
-        if (!context.Request.Path.HasValue ||
-            context.Request.Path.Value.EndsWith(".html") ||
-            !context.Request.Path.Value.Contains('.'))
+        var isPageRequest = !context.Request.Path.HasValue ||
+                            context.Request.Path.Value.EndsWith(".html") ||
+                            !context.Request.Path.Value.Contains('.');
+        if (isPageRequest)
         {
-            context.Request.Path = "/404.html";
+            context.Request.Path = "/" + Constants.NOT_FOUND_PAGE;
         }
 
         return next(context);

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.TestHost;
+﻿using System.Net;
+using Microsoft.AspNetCore.TestHost;
 using Xunit;
 
 namespace NextJsStaticHosting.VersionAdjust.Tests;
@@ -32,8 +33,8 @@ public class IntegrationTests : IDisposable
     }
     
     [Theory]
-    [InlineData("/1/2", "[first][second]")]
-    [InlineData("/1093/2398", "[first][second]")]
+    [InlineData("/two-slugs/1/2", "[first][second]")]
+    [InlineData("/two-slugs/1093/2398", "[first][second]")]
     [InlineData("/id/2398", "[id]")]
     [InlineData("/id/test", "[id]")]
     [InlineData("/catchall/other", "catch all")]
@@ -59,6 +60,19 @@ public class IntegrationTests : IDisposable
     {
         var response = await httpClient.GetStringAsync(path);
         Assert.Equal(expectedContent, response);
+    }
+
+    [Theory]
+    [InlineData("/old")]
+    [InlineData("/old.html")]
+    [InlineData("/deprecated/page")]
+    [InlineData("/deprecated/page.html")]
+    public async Task ShouldReturn404_OfPreviousVersionRoutes(string path)
+    {
+        var response = await httpClient.GetAsync(path);
+        var content = await response.Content.ReadAsStringAsync();
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        Assert.Equal("404", content);
     }
 
     public void Dispose()

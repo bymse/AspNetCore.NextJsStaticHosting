@@ -39,4 +39,8 @@
             <TargetPath>TestFiles\%(RecursiveDir)\%(Filename)%(Extension)</TargetPath>
         </ContentWithTargetPath>
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="TestFiles\CurrentVersion\two-slugs\" />
+    </ItemGroup>
 </Project>
