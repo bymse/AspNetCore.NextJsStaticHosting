@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using NextJsStaticHosting.VersionAdjust.Endpoints;
 
@@ -22,7 +21,7 @@ public static class NextJsStaticHostingExtensions
 
         if (options.FileProvider == null)
         {
-            throw new ArgumentNullException(nameof(options.FileProvider));
+            throw new NullReferenceException(nameof(options) + "." + nameof(options.FileProvider));
         }
 
         var dataSource = new NextJsStaticEndpointsDataSource(endpoints, options);
@@ -36,17 +35,7 @@ public static class NextJsStaticHostingExtensions
         NextJsStaticFilesOptions options
     )
     {
-        applicationBuilder.UseMiddleware<PageNotFoundMiddleware>();
-        
-        return applicationBuilder.UseStaticFiles(new StaticFileOptions
-        {
-            FileProvider = options.FileProvider,
-            OnPrepareResponse = context =>
-            {
-                context.Context.Response.StatusCode = context.File.Name == Constants.NOT_FOUND_PAGE
-                    ?  404
-                    : context.Context.Response.StatusCode;
-            } 
-        });
+        applicationBuilder.UseMiddleware<StaticEndpointNotFoundMiddleware>();
+        return applicationBuilder.UseStaticFiles(options);
     }
 }

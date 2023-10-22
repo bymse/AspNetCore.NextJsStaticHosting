@@ -4,7 +4,12 @@ namespace NextJsStaticHosting.VersionAdjust;
 
 public class NextJsStaticEndpointsOptions
 {
-    public IFileProvider FileProvider { get; init; }
-    
-    public string[] PathsToExclude { get; init; } = Array.Empty<string>();
+    public NextJsStaticEndpointsOptions(IFileProvider fileProvider)
+    {
+        FileProvider = fileProvider;
+    }
+
+    public IFileProvider FileProvider { get; }
+
+    public string[] PathsToExclude { get; init; } = { "_next" };
 }

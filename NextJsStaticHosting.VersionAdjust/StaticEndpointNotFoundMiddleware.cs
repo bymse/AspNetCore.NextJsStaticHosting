@@ -2,11 +2,11 @@
 
 namespace NextJsStaticHosting.VersionAdjust;
 
-public class PageNotFoundMiddleware
+internal class StaticEndpointNotFoundMiddleware
 {
     private readonly RequestDelegate next;
 
-    public PageNotFoundMiddleware(RequestDelegate next)
+    public StaticEndpointNotFoundMiddleware(RequestDelegate next)
     {
         this.next = next;
     }

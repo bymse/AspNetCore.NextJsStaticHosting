@@ -13,14 +13,9 @@ public class TestStartup
     {
         app.UseRouting();
 
-        app.UseEndpoints(b => b.MapNextJsStaticEndpoints(new NextJsStaticEndpointsOptions
-        {
-            FileProvider = new PhysicalFileProvider(TestFilesPathProvider.CurrentVersion),
-            PathsToExclude = new[]
-            {
-                "_next"
-            }
-        }));
+        app.UseEndpoints(b => b.MapNextJsStaticEndpoints(new NextJsStaticEndpointsOptions(
+            new PhysicalFileProvider(TestFilesPathProvider.CurrentVersion)
+        )));
 
         app.UseNextJsStaticFiles(new NextJsStaticFilesOptions
         {

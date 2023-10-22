@@ -6,7 +6,7 @@ using NextJsStaticHosting.VersionAdjust.Endpoints.Routes;
 
 namespace NextJsStaticHosting.VersionAdjust.Endpoints;
 
-public class NextJsStaticEndpointsDataSource : EndpointDataSource
+internal class NextJsStaticEndpointsDataSource : EndpointDataSource
 {
     private readonly Lazy<IReadOnlyList<Endpoint>> endpoints;
 
