@@ -7,8 +7,8 @@ namespace NextJsStaticHosting.VersionAdjust;
 
 public static class NextJsStaticHostingExtensions
 {
-    public static IEndpointRouteBuilder UseNextJsStaticPages(this IEndpointRouteBuilder endpoints,
-        NextJsStaticPagesOptions options)
+    public static IEndpointRouteBuilder MapNextJsStaticEndpoints(this IEndpointRouteBuilder endpoints,
+        NextJsStaticEndpointsOptions options)
     {
         if (endpoints is null)
         {
@@ -25,7 +25,7 @@ public static class NextJsStaticHostingExtensions
             throw new ArgumentNullException(nameof(options.FileProvider));
         }
 
-        var dataSource = new NextJsPagesEndpointsDataSource(endpoints, options);
+        var dataSource = new NextJsStaticEndpointsDataSource(endpoints, options);
         endpoints.DataSources.Add(dataSource);
 
         return endpoints;
@@ -36,6 +36,8 @@ public static class NextJsStaticHostingExtensions
         NextJsStaticFilesOptions options
     )
     {
+        applicationBuilder.UseMiddleware<PageNotFoundMiddleware>();
+        
         return applicationBuilder.UseStaticFiles(new StaticFileOptions
         {
             FileProvider = options.FileProvider,

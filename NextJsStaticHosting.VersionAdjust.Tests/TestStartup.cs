@@ -13,9 +13,7 @@ public class TestStartup
     {
         app.UseRouting();
 
-        app.UseMiddleware<PageNotFoundMiddleware>();
-
-        app.UseEndpoints(b => b.UseNextJsStaticPages(new NextJsStaticPagesOptions
+        app.UseEndpoints(b => b.MapNextJsStaticEndpoints(new NextJsStaticEndpointsOptions
         {
             FileProvider = new PhysicalFileProvider(TestFilesPathProvider.CurrentVersion),
             PathsToExclude = new[]

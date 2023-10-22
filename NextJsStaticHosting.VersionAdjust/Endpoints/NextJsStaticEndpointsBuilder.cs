@@ -6,12 +6,12 @@ using NextJsStaticHosting.VersionAdjust.Endpoints.Routes;
 
 namespace NextJsStaticHosting.VersionAdjust.Endpoints;
 
-internal static class NextJsPageEndpointsBuilder
+internal static class NextJsStaticEndpointsBuilder
 {
     public static IEnumerable<Endpoint> Build(
         FileRoute[] routes,
         IEndpointRouteBuilder endpoints,
-        NextJsStaticPagesOptions options
+        NextJsStaticEndpointsOptions options
     )
     {
         var requestDelegate = GetRequestDelegate(endpoints, options);
@@ -23,24 +23,24 @@ internal static class NextJsPageEndpointsBuilder
                 order: 0
             );
 
-            builder.Metadata.Add(new PageEndpointMetadata(route.FilePath));
+            builder.Metadata.Add(new StaticEndpointMetadata(route.FilePath));
             builder.DisplayName = route.FilePath;
 
             yield return builder.Build();
         }
     }
 
-    private static RequestDelegate GetRequestDelegate(IEndpointRouteBuilder endpoints, NextJsStaticPagesOptions options)
+    private static RequestDelegate GetRequestDelegate(IEndpointRouteBuilder endpoints, NextJsStaticEndpointsOptions options)
     {
         var app = endpoints.CreateApplicationBuilder();
         app.Use(next => context =>
         {
             var endpoint = context.GetEndpoint();
-            var metadata = endpoint?.Metadata.GetMetadata<PageEndpointMetadata>();
+            var metadata = endpoint?.Metadata.GetMetadata<StaticEndpointMetadata>();
             if (metadata == null)
             {
                 throw new InvalidOperationException(
-                    $"{nameof(PageEndpointMetadata)} not found on endpoint: {endpoint}"
+                    $"{nameof(StaticEndpointMetadata)} not found on endpoint: {endpoint}"
                 );
             }
 
@@ -58,9 +58,9 @@ internal static class NextJsPageEndpointsBuilder
         return app.Build();
     }
 
-    private class PageEndpointMetadata
+    private class StaticEndpointMetadata
     {
-        public PageEndpointMetadata(string path)
+        public StaticEndpointMetadata(string path)
         {
             Path = path;
         }

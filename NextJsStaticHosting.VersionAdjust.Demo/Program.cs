@@ -4,7 +4,7 @@ using NextJsStaticHosting.VersionAdjust;
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-app.UseNextJsStaticPages(new NextJsStaticPagesOptions
+app.MapNextJsStaticEndpoints(new NextJsStaticEndpointsOptions
 {
     FileProvider = new PhysicalFileProvider(builder.Environment.ContentRootPath + "/client-app/out"),
     PathsToExclude = new[]

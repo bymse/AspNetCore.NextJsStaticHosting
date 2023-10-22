@@ -3,7 +3,7 @@ using Microsoft.Extensions.FileProviders;
 
 namespace NextJsStaticHosting.VersionAdjust.Endpoints.Routes;
 
-internal static class NextJsPageFileRoutesProvider
+internal static class NextJsStaticRoutesProvider
 {
     public static IEnumerable<FileRoute> GetRoutes(IFileProvider fileProvider, string[] pathsToExclude)
     {

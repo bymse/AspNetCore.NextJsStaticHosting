@@ -32,7 +32,7 @@ public class NextJsRoutesProviderTests
             TestFilesPathProvider.CurrentVersion
         );
 
-        var actual = NextJsPageFileRoutesProvider
+        var actual = NextJsStaticRoutesProvider
             .GetRoutes(fileProvider, Array.Empty<string>())
             .OrderBy(e => e.Route)
             .ToArray();
