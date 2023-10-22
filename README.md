@@ -73,3 +73,7 @@ In `Bymse.AspNetCore.NextJsStaticHosting`` it is possible to provide multiple ve
 2. Static files are served from all available versions, but files from the latest version will have priority.
 
 This way opened version can access old chunks and after refresh user will get new version of application.
+
+## References
+
+[NextjsStaticHosting-AspNetCore](https://github.com/davidnx/NextjsStaticHosting-AspNetCore) was used as a reference for endpoint map building. Thanks to the author https://github.com/davidnx.
