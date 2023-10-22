@@ -20,6 +20,7 @@ public class IntegrationTests : IDisposable
 
     [Theory]
     [InlineData("/", "index")]
+    [InlineData("/index.html", "index")]
     public async Task ShouldReturnCurrentVersionOfPages(string path, string expectedContent)
     {
         var response = await httpClient.GetStringAsync(path);
