@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCore.NextJsStaticHosting", "AspNetCore.NextJsStaticHosting\AspNetCore.NextJsStaticHosting.csproj", "{7EDDFCBB-D888-417A-B3F7-2D47547A1C6D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCore.NextJsStaticHosting.Tests", "AspNetCore.NextJsStaticHosting.Tests\AspNetCore.NextJsStaticHosting.Tests.csproj", "{DE1541E1-990E-4055-B202-6D1B85DB8D1C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7EDDFCBB-D888-417A-B3F7-2D47547A1C6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EDDFCBB-D888-417A-B3F7-2D47547A1C6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7EDDFCBB-D888-417A-B3F7-2D47547A1C6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7EDDFCBB-D888-417A-B3F7-2D47547A1C6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE1541E1-990E-4055-B202-6D1B85DB8D1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE1541E1-990E-4055-B202-6D1B85DB8D1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE1541E1-990E-4055-B202-6D1B85DB8D1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE1541E1-990E-4055-B202-6D1B85DB8D1C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
