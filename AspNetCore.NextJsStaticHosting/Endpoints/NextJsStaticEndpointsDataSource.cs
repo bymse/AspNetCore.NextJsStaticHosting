@@ -25,9 +25,7 @@ internal class NextJsStaticEndpointsDataSource : EndpointDataSource
         if (options.EnableEndpointRebuildOnChange)
         {
             ReinitChangeToken();
-            options.FileProvider
-                .Watch("**/*.html")
-                .RegisterChangeCallback(OnFileChange, null);
+            InitializeWatch();
         }
     }
 
@@ -35,9 +33,17 @@ internal class NextJsStaticEndpointsDataSource : EndpointDataSource
     {
         lock (@lock)
         {
+            InitializeWatch();
             LoadEndpoints();
             ReinitChangeToken();
         }
+    }
+
+    private void InitializeWatch()
+    {
+        options.FileProvider
+            .Watch("**")
+            .RegisterChangeCallback(OnFileChange, null);
     }
 
     private void LoadEndpoints()
