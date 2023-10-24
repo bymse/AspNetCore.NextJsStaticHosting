@@ -26,7 +26,7 @@ internal class NextJsStaticEndpointsDataSource : EndpointDataSource
         {
             ReinitChangeToken();
             options.FileProvider
-                .Watch("**/*")
+                .Watch("**/*.html")
                 .RegisterChangeCallback(OnFileChange, null);
         }
         else
