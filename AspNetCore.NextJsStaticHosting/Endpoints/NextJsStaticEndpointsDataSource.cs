@@ -8,23 +8,65 @@ namespace AspNetCore.NextJsStaticHosting.Endpoints;
 
 internal class NextJsStaticEndpointsDataSource : EndpointDataSource
 {
-    private readonly Lazy<IReadOnlyList<Endpoint>> endpoints;
+    private readonly object @lock = new(); 
+    private Endpoint[] endpoints;
+    private CancellationTokenSource? cancellationTokenSource;
+    private IChangeToken changeToken;
+
+    private readonly IEndpointRouteBuilder endpointsBuilder;
+    private readonly NextJsStaticEndpointsOptions options;
 
     public NextJsStaticEndpointsDataSource(IEndpointRouteBuilder endpointsBuilder, NextJsStaticEndpointsOptions options)
     {
-        endpoints = new Lazy<IReadOnlyList<Endpoint>>(() =>
-        {
-            var routes = NextJsStaticRoutesProvider
-                .GetRoutes(options.FileProvider, options.PathsToExclude)
-                .ToArray();
+        this.endpointsBuilder = endpointsBuilder;
+        this.options = options;
+        LoadEndpoints();
 
-            return NextJsStaticEndpointsBuilder
-                .Build(routes, endpointsBuilder, options)
-                .ToArray();
-        });
+        if (options.EnableEndpointRebuildOnChange)
+        {
+            ReinitChangeToken();
+            options.FileProvider
+                .Watch("**/*")
+                .RegisterChangeCallback(OnFileChange, null);
+        }
+        else
+        {
+            changeToken = NullChangeToken.Singleton;
+        }
     }
 
-    public override IReadOnlyList<Endpoint> Endpoints => endpoints.Value;
+    private void OnFileChange(object _)
+    {
+        lock (@lock)
+        {
+            LoadEndpoints();
+            ReinitChangeToken();
+        }
+    }
 
-    public override IChangeToken GetChangeToken() => NullChangeToken.Singleton;
+    private void LoadEndpoints()
+    {
+        var routes = NextJsStaticRoutesProvider
+            .GetRoutes(options.FileProvider, options.PathsToExclude)
+            .ToArray();
+
+        var arr = NextJsStaticEndpointsBuilder
+            .Build(routes, endpointsBuilder, options)
+            .ToArray();
+
+        endpoints = arr;
+    }
+
+    private void ReinitChangeToken()
+    {
+        var oldCancellationTokenSource = cancellationTokenSource;
+        cancellationTokenSource = new CancellationTokenSource();
+        changeToken = new CancellationChangeToken(cancellationTokenSource.Token);
+
+        oldCancellationTokenSource?.Cancel();
+    }
+
+    public override IReadOnlyList<Endpoint> Endpoints => endpoints;
+
+    public override IChangeToken GetChangeToken() => changeToken;
 }

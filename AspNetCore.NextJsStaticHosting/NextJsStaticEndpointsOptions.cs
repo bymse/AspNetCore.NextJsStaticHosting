@@ -12,4 +12,5 @@ public class NextJsStaticEndpointsOptions
     public IFileProvider FileProvider { get; }
 
     public string[] PathsToExclude { get; init; } = { "_next" };
+    public bool EnableEndpointRebuildOnChange { get; init; } = true;
 }
