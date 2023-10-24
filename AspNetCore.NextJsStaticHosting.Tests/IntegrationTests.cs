@@ -130,7 +130,7 @@ public class IntegrationTests : IDisposable
         var pathToFile = Path.Combine(TestFilesPathProvider.CurrentVersion, filePath.TrimStart('/'));
         FileHelpers.WriteFileRecursively(pathToFile, key);
 
-        Thread.Sleep(100);
+        Thread.Sleep(1000);
 
         await AssertPathContent(route, key);
 
