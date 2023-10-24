@@ -110,10 +110,10 @@ public class IntegrationTests : IDisposable
     [Theory]
     [InlineData("/{0}.html", "/{0}.html")]
     [InlineData("/{0}.html", "/{0}")]
-    [InlineData("/random/{0}.html", "/random/{0}.html")]
-    [InlineData("/random/{0}.html", "/random/{0}")]
-    [InlineData("/random2/[id].html", "/random2/{0}.html")]
-    [InlineData("/random2/[id].html", "/random2/{0}")]
+    [InlineData("/random1/{0}.html", "/random1/{0}.html")]
+    [InlineData("/random2/{0}.html", "/random2/{0}")]
+    [InlineData("/random3/[id].html", "/random3/{0}.html")]
+    [InlineData("/random4/[id].html", "/random4/{0}")]
     [InlineData("/_next/static/chunks/{0}.js", "/_next/static/chunks/{0}.js", "")]
     public async Task ShouldReturn_NewlyCreatedFile(
         string filePathTemplate,
@@ -132,9 +132,14 @@ public class IntegrationTests : IDisposable
 
         Thread.Sleep(1000);
 
-        await AssertPathContent(route, key);
-
-        File.Delete(pathToFile);
+        try
+        {
+            await AssertPathContent(route, key);
+        }
+        finally
+        {
+            File.Delete(pathToFile);
+        }
     }
 
     private async Task AssertPathContent(string path, string expectedContent)
