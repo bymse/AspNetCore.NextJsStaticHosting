@@ -1,23 +1,15 @@
 ﻿using System.Net;
-using System.Runtime.InteropServices;
-using Microsoft.AspNetCore.TestHost;
 using Xunit;
 
 namespace AspNetCore.NextJsStaticHosting.Tests;
 
-public class IntegrationTests : IDisposable
+public class IntegrationTests : IClassFixture<TestServerFixture>
 {
-    private readonly TestServer testServer;
-
     private readonly HttpClient httpClient;
 
-    public IntegrationTests()
+    public IntegrationTests(TestServerFixture fixture)
     {
-        var webHostBuilder = new WebHostBuilder()
-            .UseStartup<TestStartup>();
-
-        testServer = new TestServer(webHostBuilder);
-        httpClient = testServer.CreateClient();
+        httpClient = fixture.HttpClient;
     }
 
     [Theory]
@@ -114,6 +106,8 @@ public class IntegrationTests : IDisposable
     [InlineData("/random2/{0}.html", "/random2/{0}")]
     [InlineData("/random3/[id].html", "/random3/{0}.html")]
     [InlineData("/random4/[id].html", "/random4/{0}")]
+    [InlineData("/random5/random6/{0}.html", "/random5/random6/{0}.html")]
+    [InlineData("/random7/random8/{0}.html", "/random7/random8/{0}")]
     [InlineData("/_next/static/chunks/{0}.js", "/_next/static/chunks/{0}.js", "")]
     public async Task ShouldReturn_NewlyCreatedFile(
         string filePathTemplate,
@@ -130,7 +124,7 @@ public class IntegrationTests : IDisposable
         var pathToFile = Path.Combine(TestFilesPathProvider.CurrentVersion, filePath.TrimStart('/'));
         FileHelpers.WriteFileRecursively(pathToFile, key);
 
-        Thread.Sleep(1000);
+        Thread.Sleep(100);
 
         try
         {
@@ -154,10 +148,5 @@ public class IntegrationTests : IDisposable
         var content = await response.Content.ReadAsStringAsync();
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         Assert.Equal(expectedContent, content);
-    }
-
-    public void Dispose()
-    {
-        testServer.Dispose();
     }
 }
