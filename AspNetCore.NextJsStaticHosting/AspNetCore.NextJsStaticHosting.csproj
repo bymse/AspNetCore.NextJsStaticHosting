@@ -7,7 +7,7 @@
         <RepositoryUrl>https://github.com/bymse/AspNetCore.NextJsStaticHosting</RepositoryUrl>
         <Description>ASP.NET Core lib for hosting of statically exported next.js application</Description>
         <RepositoryType>git</RepositoryType>
-        <Version>0.0.1</Version>
+        <Version>0.0.2</Version>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <PackageId>Bymse.AspNetCore.NextJsStaticHosting</PackageId>

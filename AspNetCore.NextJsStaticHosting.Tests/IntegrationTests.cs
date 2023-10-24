@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Runtime.InteropServices;
 using Microsoft.AspNetCore.TestHost;
 using Xunit;
 
@@ -30,7 +31,7 @@ public class IntegrationTests : IDisposable
     {
         await AssertPathContent(path, expectedContent);
     }
-    
+
     [Theory]
     [InlineData("/two-slugs/1/2", "[first][second]")]
     [InlineData("/two-slugs/1093/2398", "[first][second]")]
@@ -58,21 +59,21 @@ public class IntegrationTests : IDisposable
     {
         await AssertPathContent(path, expectedContent);
     }
-    
+
     [Theory]
     [InlineData("/image.png", "current-image")]
     public async Task ShouldReturnCurrentVersion_OnNonHtmlFiles(string path, string expectedContent)
     {
         await AssertPathContent(path, expectedContent);
     }
-    
+
     [Theory]
     [InlineData("/old-image.png", "prev-image")]
     public async Task ShouldReturnPreviousVersion_OnRemovedFromCurrent_NonHtmlFiles(string path, string expectedContent)
     {
         await AssertPathContent(path, expectedContent);
     }
-    
+
     [Theory]
     [InlineData("/_next/static/chunks/main-prev.js", "main-prev")]
     [InlineData("/_next/static/chunks/pages/index-prev.js", "index-prev")]
@@ -104,6 +105,36 @@ public class IntegrationTests : IDisposable
     public async Task ShouldReturnEmpty404_OnNonExistentPath(string path)
     {
         await AssertNotFound(path, "");
+    }
+
+    [Theory]
+    [InlineData("/{0}.html", "/{0}.html")]
+    [InlineData("/{0}.html", "/{0}")]
+    [InlineData("/random/{0}.html", "/random/{0}.html")]
+    [InlineData("/random/{0}.html", "/random/{0}")]
+    [InlineData("/random2/[id].html", "/random2/{0}.html")]
+    [InlineData("/random2/[id].html", "/random2/{0}")]
+    [InlineData("/_next/static/chunks/{0}.js", "/_next/static/chunks/{0}.js", "")]
+    public async Task ShouldReturn_NewlyCreatedFile(
+        string filePathTemplate,
+        string routeTemplate,
+        string notFoundContent = "404"
+    )
+    {
+        var key = Guid.NewGuid().ToString();
+        var filePath = string.Format(filePathTemplate, key);
+        var route = string.Format(routeTemplate, key);
+
+        await AssertNotFound(route, notFoundContent);
+
+        var pathToFile = Path.Combine(TestFilesPathProvider.CurrentVersion, filePath.TrimStart('/'));
+        FileHelpers.WriteFileRecursively(pathToFile, key);
+
+        Thread.Sleep(100);
+
+        await AssertPathContent(route, key);
+
+        File.Delete(pathToFile);
     }
 
     private async Task AssertPathContent(string path, string expectedContent)
