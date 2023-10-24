@@ -8,18 +8,18 @@ namespace AspNetCore.NextJsStaticHosting.Endpoints;
 
 internal class NextJsStaticEndpointsDataSource : EndpointDataSource
 {
-    private readonly object @lock = new(); 
-    private Endpoint[] endpoints;
+    private readonly object @lock = new();
+    private Endpoint[] endpoints = Array.Empty<Endpoint>();
     private CancellationTokenSource? cancellationTokenSource;
-    private IChangeToken changeToken;
+    private IChangeToken changeToken = NullChangeToken.Singleton;
 
-    private readonly IEndpointRouteBuilder endpointsBuilder;
+    private readonly RequestDelegate requestDelegate;
     private readonly NextJsStaticEndpointsOptions options;
 
     public NextJsStaticEndpointsDataSource(IEndpointRouteBuilder endpointsBuilder, NextJsStaticEndpointsOptions options)
     {
-        this.endpointsBuilder = endpointsBuilder;
         this.options = options;
+        requestDelegate = NextJsStaticEndpointDelegateBuilder.Build(endpointsBuilder, options);
         LoadEndpoints();
 
         if (options.EnableEndpointRebuildOnChange)
@@ -28,10 +28,6 @@ internal class NextJsStaticEndpointsDataSource : EndpointDataSource
             options.FileProvider
                 .Watch("**/*.html")
                 .RegisterChangeCallback(OnFileChange, null);
-        }
-        else
-        {
-            changeToken = NullChangeToken.Singleton;
         }
     }
 
@@ -51,7 +47,7 @@ internal class NextJsStaticEndpointsDataSource : EndpointDataSource
             .ToArray();
 
         var arr = NextJsStaticEndpointsBuilder
-            .Build(routes, endpointsBuilder, options)
+            .Build(routes, requestDelegate)
             .ToArray();
 
         endpoints = arr;
